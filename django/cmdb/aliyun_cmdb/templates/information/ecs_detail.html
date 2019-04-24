@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+
+{% block title %} ECS详情页 {% endblock %}
+
+{% block content %}
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h1 class="page-header">{{ p_name }}ECS实例管理</h1>
+    <div align="center">
+        <span id="msg" style="text-align: center " ></span>
+    </div>
+
+    <div>
+        <div style="height: 40px;">
+            <button class="btn btn-sm btn-primary start">启动</button>
+            <button class="btn btn-sm btn-primary stop" >关闭</button>
+            <button class="btn btn-sm btn-primary restart">重启</button>
+            <button class="btn btn-sm btn-primary reset" data-toggle="modal" data-target="#myModal">重置密码</button>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        重置密码
+                    </h4>
+                </div>
+           <!--<form action="/reset_ecs/"  id="submitForm" method="post" >-->
+                <div class="modal-body">
+
+                        <div >
+                            <div >
+                                <p><span id="pwdmsg" style="text-align: center;margin-left: 50px "></span></p>
+                            </div>
+                            <div>
+                                <label>新密码：</label>
+                                <input  type="password" name="password"  placeholder="请输入密码">
+                                <span style="color: red;">*</span>
+                            </div>
+                            <div>
+                                <label>确认密码：</label>
+                                <input  type="password" name="confirmpwd"  placeholder="请输入确认密码">
+                                <span style="color: red;">*</span>
+                            </div>
+
+                        </div>
+
+                </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                        </button>
+                        <button type="submit" class="btn btn-primary submit">提交
+                        </button>
+            </div><!-- /.modal-content -->
+            <!--</form>-->
+        </div><!-- /.modal -->
+    </div>
+        </div>
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th><input type="checkbox" name="instance_id" id="checkALL" onclick="choiceAll()"/></th>
+          <th >实例Id</th>
+          <th >实例名</th>
+          <th>cpu</th>
+          <th>内存</th>
+          <th>内网</th>
+          <th>公网</th>
+          <th>状态</th>
+          <th>过期时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in ecs_info %}
+        <tr p-name="{ row.p_name }">
+          <td><input type="checkbox" name="ecs_id" id="{{ row.id }}"/></td>
+          <td >{{ row.instanceId }}</td>
+          <td>{{ row.instanceName }}</td>
+          <td>{{ row.cpu }}</td>
+          <td>{{ row.memory }}</td>
+          <td>{{ row.pivIp }}</td>
+          <td>{{ row.pubIp }}</td>
+          <td>{{ row.status }}</td>
+          <td>{{ row.expireTime }}</td>
+            {% empty %}
+           <td>暂无相关数据</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+ <script>
+     function choiceAll() {
+         var check_list = document.getElementsByName('ecs_id');
+         if(document.getElementById('checkALL').checked) {
+             for (i=0;i<check_list.length;i++) {
+                 check_list[i].checked = true;
+             }
+         }else {
+             for (i=0;i<check_list.length;i++) {
+                 check_list[i].checked = false;
+             }
+         }
+     }
+
+     $('.start').click(function () {
+         var id_array = new Array()
+          $("input[name='ecs_id']:checked").each(function () {
+             id_array.push($(this).attr('id'))
+         });
+         $.ajax({
+         url:'/ecs_start',
+         type: 'GET',
+         traditional: true,
+         data: {'instanceIds': id_array},
+         dataType: 'json',
+         success:function (data) {
+             var obj = data;
+             status = obj.status;
+             msg = obj.msg;
+             $('#msg').text(msg);
+             if (status){
+                 $('#msg').css({
+                     "backgroundColor":"green",
+                     "color": "white",
+                     "font-size": "20px"
+                 });
+
+             }else{
+                  $('#msg').css({
+                     "backgroundColor":"red",
+                     "color": "white",
+                     "font-size": "20px"
+                 });
+             }
+             $('#msg').text(msg);
+                  setTimeout(function () {
+                      $('#msg').text("")
+                  },3000);
+                  window.location.reload()
+         }
+      })
+     });
+
+     $('.stop').click(function () {
+         var id_array = new Array()
+          $("input[name='ecs_id']:checked").each(function () {
+             id_array.push($(this).attr('id'))
+         });
+         $.ajax({
+         url:'/ecs_stop',
+         type: 'GET',
+         traditional: true,
+         data: {'instanceIds': id_array},
+         dataType: 'json',
+         success:function (data) {
+             var obj = data;
+             status = obj.status;
+             msg = obj.msg;
+             $('#msg').text(msg);
+             if (status){
+                 $('#msg').css({
+                     "backgroundColor":"green",
+                     "color": "white",
+                     "font-size": "20px"
+                 });
+
+             }else{
+                  $('#msg').css({
+                     "backgroundColor":"red",
+                     "color": "white",
+                     "font-size": "20px"
+                 });
+             }
+             $('#msg').text(msg);
+                  setTimeout(function () {
+                      $('#msg').text("")
+                  },3000);
+                  window.location.reload()
+         }
+      })
+     });
+
+     $('.restart').click(function () {
+         var id_array = new Array();
+          $("input[name='ecs_id']:checked").each(function () {
+             id_array.push($(this).attr('id'))
+         });
+         $.ajax({
+         url:'/ecs_restart',
+         type: 'GET',
+         traditional: true,
+         data: {'instanceIds': id_array},
+         dataType: 'json',
+         success:function (data) {
+             var obj = data;
+             status = obj.status;
+             msg = obj.msg;
+             $('#msg').text(msg);
+             if (status){
+                 $('#msg').css({
+                     "backgroundColor":"green",
+                     "color": "white",
+                     "font-size": "20px"
+                 });
+
+             }else{
+                  $('#msg').css({
+                     "backgroundColor":"red",
+                     "color": "white",
+                     "font-size": "20px"
+                 });
+             }
+             $('#msg').text(msg);
+                  setTimeout(function () {
+                      $('#msg').text("")
+                  },3000);
+                  window.location.reload()
+         }
+      })
+     });
+
+    //  $('.submit').click(function () {
+    //     $('#myModal').modal('hide');
+    // });
+
+     $('.submit').click(function () {
+         var id_array = new Array();
+          $("input[name='ecs_id']:checked").each(function () {
+             id_array.push($(this).attr('id'))
+         });
+         var pwd = $('input[name="password"]').val();
+         var cpwd = $('input[name="confirmpwd"]').val();
+         if (pwd != cpwd){
+             $('#pwdmsg').css({'color':'white','fontSize':'18px','backgroundColor':'red'});
+             $('#pwdmsg').text("两次输入的密码不一致");
+             setTimeout(function () {
+                 $('#pwdmsg').text('')
+             },2000);
+         }else if(pwd.length == 0 ||cpwd.length == 0){
+             $('#pwdmsg').css({'color':'white','fontSize':'18px','backgroundColor':'red'});
+             $('#pwdmsg').text("密码不能为空");
+             setTimeout(function () {
+                 $('#pwdmsg').text('')
+             },2000);
+         }else{
+                 $.ajax({
+                     url:'/ecs_reset/',
+                     type: 'post',
+                     traditional: true,
+                     data: {'instanceIds': id_array, 'password':pwd},
+                     dataType: 'json',
+                     success:function (data) {
+                         var obj = data;
+                         status = obj.status;
+                         msg = obj.msg;
+                         $('#msg').text(msg);
+                         if (status) {
+                             $('#msg').css({
+                                 "backgroundColor": "green",
+                                 "color": "white",
+                                 "font-size": "20px"
+                             })
+                         }
+                     }
+             })
+         }
+         $('#myModal').modal('hide');
+         $("input[type='checkbox']").each(function () {
+             $(this).prop('checked',false);
+         });
+     });
+
+
+
+
+ </script>
+{% endblock %}

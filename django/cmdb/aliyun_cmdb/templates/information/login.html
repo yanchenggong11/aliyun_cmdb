@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <style>
+        .login{
+            height: 200px;
+            width: 300px;
+            background-color: #f7f1e2;
+            position: fixed;
+            top: 200px;
+            left: 500px;
+        }
+    </style>
+</head>
+<body style="background: #f7f1e2">
+    <div class="login" style="text-align: center; ">
+        <div style="text-align: center">
+            <p style="background-color: red;color: white">{{ error_msg }}</p>
+        </div>
+        <form action="/login/" method="post">
+            <p>
+                <label for="username" >用户名:</label>
+                <input type="text" id="username" name="username" placeholder="username" />
+            </p>
+            <p >
+                <label for="password" >密&nbsp;&nbsp;&nbsp;码:</label>
+                <input type="password" id="password" name="password" placeholder="password" />
+            </p>
+            <div>
+
+                <p>
+                    <input type="submit" value="登录" />
+                </p>
+
+            </div>
+        </form>
+    </div>
+</body>
+</html>

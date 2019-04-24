@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body style="margin: 0 auto">
+    <form action="/form_test/" method="post" enctype="multipart/form-data">
+        <p>{{ form.user }} {{ form.user.errors }}</p>
+        <p>{{ form.gender }} {{ form.gender.errors }}</p>
+        <p>{{ form.city }} {{ form.city.errors }}</p>
+        <p>{{ form.pwd }} {{ form.pwd.errors }}</p>
+        <p>{{ form.phone }} {{ form.phone.errors }}</p>
+        <input type="submit" value="提交">
+    </form>
+
+</body>
+</html>

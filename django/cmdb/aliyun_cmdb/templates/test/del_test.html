@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+       <link href="/static/bootstamp/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="/static/bootstamp/css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+ <a class="btn btn-primary" onClick="delcfm('http://www.baidu.com')">删除</a>
+
+<!-- 信息删除确认 -->
+<div class="modal fade" id="delcfmModel">
+  <div class="modal-dialog">
+    <div class="modal-content message_align">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">提示信息</h4>
+      </div>
+      <div class="modal-body">
+        <p>您确认要删除吗？</p>
+      </div>
+      <div class="modal-footer">
+      	 <input type="hidden" id="url"/>
+      	 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+      	 <a  onclick="urlSubmit()" class="btn btn-success" data-dismiss="modal">确定</a>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<script src="/static/bootstamp/js/jquery-1.12.4.min.js"></script>
+    <script src="/static/bootstamp/js/bootstrap.min.js"></script>
+<script>
+    function delcfm(url) {
+      $('#url').val(url);//给会话中的隐藏属性URL赋值
+      $('#delcfmModel').modal();
+}
+function urlSubmit() {
+    var url = $.trim($("#url").val());//获取会话中的隐藏属性URL
+    window.location.href = url;
+}
+</script>
+</body>
+</html>
